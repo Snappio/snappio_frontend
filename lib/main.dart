@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:snappio_frontend/screens/login_page.dart';
+import 'package:snappio_frontend/themes.dart';
+import 'package:snappio_frontend/screens/chat_section.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,10 +13,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const LoginPage(),
-      theme: ThemeData(
-        fontFamily: "Rubik",
-      ),
+      themeMode: ThemeMode.system,
+      theme: Themes.lightMode(context),
+      darkTheme: Themes.darkMode(context),
+      home: const ChatSection(),
     );
   }
 }
