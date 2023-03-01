@@ -4,7 +4,13 @@ class Themes {
   static ThemeData lightMode(BuildContext context) => ThemeData(
     primarySwatch: Colors.indigo,
     fontFamily: "Rubik",
+    textTheme: Theme.of(context).textTheme.apply(
+      bodyColor: darkBg,
+      displayColor: darkBg,
+      fontFamily: "Rubik"
+    ),
     canvasColor: lightBg,
+    cardColor: lightAccent,
     appBarTheme: const AppBarTheme(
       color: lightAccent,
       iconTheme: IconThemeData(color: Color(0xff0e0d18)),
@@ -19,15 +25,18 @@ class Themes {
 
   static ThemeData darkMode(BuildContext context) => ThemeData(
       primarySwatch: Colors.deepPurple,
+      brightness: Brightness.dark,
       fontFamily: "Rubik",
       textTheme: Theme.of(context).textTheme.apply(
         bodyColor: lightBg,
-        // displayColor: lightBg
+        displayColor: lightBg,
+        fontFamily: "Rubik"
       ),
       canvasColor: darkBg,
+      cardColor: darkAccent,
       appBarTheme: const AppBarTheme(
         color: darkAccent,
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(color: Color(0xffd2def4)),
         titleTextStyle: TextStyle(
           fontFamily: "Rubik",
           fontWeight: FontWeight.bold,
