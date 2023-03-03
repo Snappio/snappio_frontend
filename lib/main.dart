@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:snappio_frontend/themes.dart';
-import 'package:snappio_frontend/screens/signup_page.dart';
 import 'package:snappio_frontend/screens/login_page.dart';
 
 void main() {
@@ -19,7 +18,6 @@ class MyApp extends StatelessWidget {
       darkTheme: Themes.darkMode(context),
       title: "Snappio_frontend",
       home: const LoginPage(),
-      // home: const SignupPage(),
     );
   }
 }

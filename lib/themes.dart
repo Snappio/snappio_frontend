@@ -24,7 +24,7 @@ class Themes {
   );
 
   static ThemeData darkMode(BuildContext context) => ThemeData(
-      primarySwatch: Colors.deepPurple,
+      primarySwatch: Colors.grey,
       brightness: Brightness.dark,
       fontFamily: "Rubik",
       textTheme: Theme.of(context).textTheme.apply(
