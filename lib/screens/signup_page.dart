@@ -122,7 +122,9 @@ class _SignupPageState extends State<SignupPage> {
                     children: [
                       const Text("Already have an account? "),
                       InkWell(
-                        onTap: () => Navigator.of(context).pop(),
+                        onTap: () => Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) => const LoginPage()),
+                        ),
                         child: const Text(" Sign In",
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
