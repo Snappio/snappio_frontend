@@ -18,8 +18,8 @@ class MyApp extends StatelessWidget {
       theme: Themes.lightMode(context),
       darkTheme: Themes.darkMode(context),
       title: "Snappio_frontend",
-      // home: const LoginPage(),
-      home: const SignupPage(),
+      home: const LoginPage(),
+      // home: const SignupPage(),
     );
   }
 }
