@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:snappio_frontend/screens/login_page.dart';
 import 'package:snappio_frontend/themes.dart';
 
 class SignupPage extends StatefulWidget {
@@ -125,6 +126,7 @@ class _SignupPageState extends State<SignupPage> {
                         const Text("Already have an account? "),
                         InkWell(
                           onTap: () => Navigator.of(context).pop(),
+                          ),
                           child: const Text(" Sign In",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
