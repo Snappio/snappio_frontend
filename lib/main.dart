@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:snappio_frontend/router.dart';
 import 'package:snappio_frontend/themes.dart';
 import 'package:snappio_frontend/screens/login_page.dart';
 
@@ -16,8 +17,9 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.system,
       theme: Themes.lightMode(context),
       darkTheme: Themes.darkMode(context),
-      title: "Snappio_frontend",
+      title: "Snappio",
       home: const LoginPage(),
+      onGenerateRoute: (settings) => generateRoute(settings),
     );
   }
 }
