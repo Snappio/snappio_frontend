@@ -13,7 +13,7 @@ class Themes {
     cardColor: lightAccent,
     appBarTheme: const AppBarTheme(
       color: lightAccent,
-      iconTheme: IconThemeData(color: Color(0xff0e0d18)),
+      iconTheme: IconThemeData(color: darkBg),
       titleTextStyle: TextStyle(
         color: Color(0xff0e0d18),
         fontFamily: "Rubik",
@@ -36,7 +36,7 @@ class Themes {
       cardColor: darkAccent,
       appBarTheme: const AppBarTheme(
         color: darkAccent,
-        iconTheme: IconThemeData(color: Color(0xffd2def4)),
+        iconTheme: IconThemeData(color: lightBg),
         titleTextStyle: TextStyle(
           fontFamily: "Rubik",
           fontWeight: FontWeight.bold,

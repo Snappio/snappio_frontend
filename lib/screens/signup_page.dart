@@ -12,6 +12,7 @@ class SignupPage extends StatefulWidget {
 
 class _SignupPageState extends State<SignupPage> {
   final _formKey = GlobalKey<FormState>();
+  static bool _load  = false;
   static String _username = "";
   static String _email = "";
   static String _name = "";
@@ -26,7 +27,7 @@ class _SignupPageState extends State<SignupPage> {
   }
   signupPressed(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
-      setState(() {});
+      setState( () { _load = true; } );
       AuthServices().signupUser(
         context: context,
         username: _username,
@@ -149,15 +150,17 @@ class _SignupPageState extends State<SignupPage> {
                   const SizedBox(height: 50),
                   InkWell(
                     onTap: () => signupPressed(context),
-                    child: Container(
+                    child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         width: double.infinity,
                         alignment: Alignment.center,
                         decoration: ShapeDecoration(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(25)),
-                            color: Theme.of(context).cardColor),
-                        child: const Text("Sign Up",
+                            color: _load ? Colors.transparent : Theme.of(context).cardColor),
+                        child: _load ? const CircularProgressIndicator()
+                            : const Text("Sign Up",
                             style: TextStyle(fontWeight: FontWeight.bold),
                             textScaleFactor: 1.4)),
                   ),
