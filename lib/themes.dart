@@ -11,6 +11,7 @@ class Themes {
     ),
     canvasColor: lightBg,
     cardColor: lightAccent,
+      splashColor: darkBg,
     appBarTheme: const AppBarTheme(
       color: lightAccent,
       iconTheme: IconThemeData(color: darkBg),
@@ -34,6 +35,7 @@ class Themes {
       ),
       canvasColor: darkBg,
       cardColor: darkAccent,
+      splashColor: lightBg,
       appBarTheme: const AppBarTheme(
         color: darkAccent,
         iconTheme: IconThemeData(color: lightBg),

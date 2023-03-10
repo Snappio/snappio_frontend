@@ -67,7 +67,7 @@ class _SignupPageState extends State<SignupPage> {
           children: [
             Image.asset("assets/images/signup.png"),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 35),
+              padding: const EdgeInsets.symmetric(horizontal: 42),
               width: double.infinity,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -172,6 +172,7 @@ class _SignupPageState extends State<SignupPage> {
                     onPressed: () => signupBtnPressed(context),
                     animateOnTap: true,
                     height: 54,
+                    elevation: 3,
                     successColor: Colors.green,
                     color: Theme.of(context).cardColor,
                     child: const Text("Sign In",

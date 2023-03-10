@@ -1,23 +1,14 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 import 'package:snappio_frontend/models/user_model.dart';
-import 'package:snappio_frontend/services/auth_services.dart';
 
-class UserProvider extends StateNotifier<User> {
-  UserProvider(super.state);
+class UserProvider extends ChangeNotifier {
+  User? _user;
 
-  User _user = User(
-      id: 0,
-      username: '',
-      email: '',
-      name: '',
-      password: '',
-      access: '',
-  );
+  User? get user => _user;
 
-  User get user => _user;
-
-  void setUser(Map<String, dynamic> user) {
-    _user = User.fromJson(user);
-    state = _user;
+  void setUser(User? user) {
+    _user = user;
+    notifyListeners();
   }
 }

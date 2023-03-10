@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:snappio_frontend/router.dart';
 import 'package:snappio_frontend/themes.dart';
 import 'package:snappio_frontend/screens/login_page.dart';
 
 void main() {
-  runApp(const ProviderScope(
-    child: MyApp()
-  ));
+  runApp(const MyApp());
 }
 
-class MyApp extends ConsumerWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.system,

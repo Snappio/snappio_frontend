@@ -93,6 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                         onPressed: () => loginBtnPressed(context),
                         animateOnTap: true,
                         height: 54,
+                        elevation: 3,
                         successColor: Colors.green,
                         color: Theme.of(context).cardColor,
                         child: const Text("Sign In",
