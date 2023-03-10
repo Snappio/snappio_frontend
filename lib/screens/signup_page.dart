@@ -1,6 +1,13 @@
+import 'dart:core';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:rounded_loading_button/rounded_loading_button.dart';
+import 'package:snappio_frontend/screens/chat_section.dart';
+import 'package:snappio_frontend/screens/login_page.dart';
 import 'package:snappio_frontend/themes.dart';
 import 'package:snappio_frontend/services/auth_services.dart';
+import '../constants/snackbar.dart';
+import '../services/auth_services.dart';
 
 class SignupPage extends StatefulWidget {
   static const String routeName = "/signup";
@@ -12,7 +19,7 @@ class SignupPage extends StatefulWidget {
 
 class _SignupPageState extends State<SignupPage> {
   final _formKey = GlobalKey<FormState>();
-  static bool _load  = false;
+  final RoundedLoadingButtonController _controller = RoundedLoadingButtonController();
   static String _username = "";
   static String _email = "";
   static String _name = "";
@@ -25,16 +32,28 @@ class _SignupPageState extends State<SignupPage> {
   bool validUsername() {
     return RegExp(r"^(?=[a-z0-9]{4,10}$)").hasMatch(_username);
   }
-  signupPressed(BuildContext context) async {
+
+  signupBtnPressed(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
-      setState( () { _load = true; } );
-      AuthServices().signupUser(
-        context: context,
+      setState(() {});
+      var res = AuthServices().signupUser(
         username: _username,
         email: _email,
         name: _name,
         password: _password,
       );
+
+      if(await res){
+        showSnackBar(context, "Success: Account created");
+        _controller.success();
+        await Future.delayed(const Duration(seconds: 2));
+        Navigator.pushReplacementNamed(context, ChatSection.routeName);
+      } else {
+        showSnackBar(context, "Error: User already exists");
+        _controller.error();
+        await Future.delayed(const Duration(seconds: 2));
+        _controller.reset();
+      }
     }
   }
 
@@ -148,21 +167,16 @@ class _SignupPageState extends State<SignupPage> {
                     ]),
                   ),
                   const SizedBox(height: 50),
-                  InkWell(
-                    onTap: () => signupPressed(context),
-                    child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 300),
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        width: double.infinity,
-                        alignment: Alignment.center,
-                        decoration: ShapeDecoration(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(25)),
-                            color: _load ? Colors.transparent : Theme.of(context).cardColor),
-                        child: _load ? const CircularProgressIndicator()
-                            : const Text("Sign Up",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                            textScaleFactor: 1.4)),
+                  RoundedLoadingButton(
+                    controller: _controller,
+                    onPressed: () => signupBtnPressed(context),
+                    animateOnTap: true,
+                    height: 54,
+                    successColor: Colors.green,
+                    color: Theme.of(context).cardColor,
+                    child: const Text("Sign In",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                        textScaleFactor: 1.4),
                   ),
                   const SizedBox(height: 20),
                   Row(
@@ -170,7 +184,8 @@ class _SignupPageState extends State<SignupPage> {
                     children: [
                       const Text("Already have an account? "),
                       InkWell(
-                        onTap: () => Navigator.pop(context),
+                        onTap: () => Navigator.pushReplacementNamed(
+                            context, LoginPage.routeName),
                         child: const Text(" Sign In",
                           style: TextStyle(
                               fontWeight: FontWeight.bold,

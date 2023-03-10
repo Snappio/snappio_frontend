@@ -1,7 +1,14 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
+import 'package:rounded_loading_button/rounded_loading_button.dart';
+import 'package:snappio_frontend/constants/snackbar.dart';
+import 'package:snappio_frontend/screens/chat_section.dart';
 import 'package:snappio_frontend/screens/signup_page.dart';
 import 'package:snappio_frontend/services/auth_services.dart';
 import 'package:snappio_frontend/themes.dart';
+
+import '../services/auth_services.dart';
 
 class LoginPage extends StatefulWidget {
   static const String routeName = "/login";
@@ -12,21 +19,30 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  static bool _load = false;
   static String _username = '';
   static String _password = '';
+  final RoundedLoadingButtonController _controller = RoundedLoadingButtonController();
 
-  void loginPressed(BuildContext context) async {
-    setState( () { _load = true; } );
-    AuthServices().loginUser(
-      context: context,
+  void loginBtnPressed(BuildContext context) async {
+    var res = AuthServices().loginUser(
       username: _username,
       password: _password,
     );
+    if(await res){
+      showSnackBar(context, "Login Successful");
+      _controller.success();
+      await Future.delayed(const Duration(seconds: 2));
+      Navigator.pushReplacementNamed(context, ChatSection.routeName);
+    } else {
+      showSnackBar(context, "Error: User doesn't exists");
+      _controller.error();
+      await Future.delayed(const Duration(seconds: 2));
+      _controller.reset();
+    }
   }
-  void signupTextPressed(){
-    Navigator.pushNamed(context, SignupPage.routeName);
-  }
+  
+  void signupTextPressed() =>
+    Navigator.pushReplacementNamed(context, SignupPage.routeName);
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               Image.asset("assets/images/login.png"),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 35),
+                padding: const EdgeInsets.symmetric(horizontal: 42),
                 width: double.infinity,
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -72,25 +88,16 @@ class _LoginPageState extends State<LoginPage> {
                         onChanged: (value) => _password = value,
                       ),
                     const SizedBox(height: 70),
-                    InkWell(
-                      onTap: () => loginPressed(context),
-                      child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 300),
-                          padding: const EdgeInsets.symmetric(vertical: 15),
-                          margin: const EdgeInsets.symmetric(horizontal: 2),
-                          width: double.infinity,
-                          alignment: Alignment.center,
-                          decoration: ShapeDecoration(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30)),
-                              color: _load
-                                  ? Colors.transparent
-                                  : Theme.of(context).cardColor),
-                          child: _load
-                              ? const CircularProgressIndicator()
-                              : const Text("Sign In",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                  textScaleFactor: 1.4))
+                    RoundedLoadingButton(
+                        controller: _controller,
+                        onPressed: () => loginBtnPressed(context),
+                        animateOnTap: true,
+                        height: 54,
+                        successColor: Colors.green,
+                        color: Theme.of(context).cardColor,
+                        child: const Text("Sign In",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                          textScaleFactor: 1.4),
                     ),
                     const SizedBox(height: 20),
                     Row(
