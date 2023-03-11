@@ -23,33 +23,26 @@ class AuthServices {
     required String password,
   }) async {
     try {
-      User user = User(
-          username: username,
-          email: email,
-          name: name,
-          password: password,
-      );
 
       print(username);
       print(email);
 
-      Response response = await _dio.post("${_baseUrl}users/",
-        data: {
+      var reqData = FormData.fromMap({
           "username": username,
           "email": email,
           "name":  name,
           "password": password,
-        },
-          options: Options(
-              contentType: "application/x-www-form-urlencoded",
-          )
+        })
+
+      Response response = await _dio.post("${_baseUrl}users/",
+        data: reqData,
       );
       print(response.data);
-      print(response);
       if(response.statusCode! < 300) {
+        fianl User user = User.fromJson(response.data);
         SharedPreferences prefsid = await SharedPreferences.getInstance();
-        Provider.of<UserProvider>(context, listen: false).setUser(User.fromJson(response.data));
-        await prefsid.setInt("x-uid", jsonDecode(response.data)["id"]);
+        Provider.of<UserProvider>(context, listen: false).setUser(user);
+        await prefsid.setInt("x-uid", user.id!);
         return true;
       } else {
         print(response.statusCode.toString());
