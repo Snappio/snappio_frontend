@@ -11,31 +11,24 @@ class AuthServices {
     validateStatus: (status) => status! < 500,
   ));
 
-  Future<bool> signupUser ({
+  Future<bool> signupUser({
     required String username,
     required String email,
     required String name,
     required String password,
   }) async {
     try {
-      User user = User(
-          id: 0,
-          username: username,
-          email: email,
-          name: name,
-          password: password,
-          access: '',
-      );
-
-      Response response = await _dio.post("${_baseUrl}users/",
+      Response response = await _dio.post(
+        "${_baseUrl}users/",
         data: {
           "username": username,
           "email": email,
-          "name":  name,
+          "name": name,
           "password": password,
+          "posts": []
         },
       );
-      if(response.statusCode! < 300){
+      if (response.statusCode! < 300) {
         return true;
       } else {
         return false;
@@ -46,20 +39,20 @@ class AuthServices {
     }
   }
 
-  Future<bool> loginUser ({
+  Future<bool> loginUser({
     required String username,
     required String password,
   }) async {
     try {
-      Response response = await _dio.post("${_baseUrl}auth/",
+      Response response = await _dio.post(
+        "${_baseUrl}auth/",
         data: {
           "username": username,
           "password": password,
         },
       );
       return (response.statusCode! < 300) ? true : false;
-    }
-    on DioError catch(e) {
+    } on DioError catch (e) {
       return false;
     }
   }
