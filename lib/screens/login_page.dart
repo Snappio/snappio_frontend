@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:snappio_frontend/constants/snackbar.dart';
@@ -25,18 +23,20 @@ class _LoginPageState extends State<LoginPage> {
 
   void loginBtnPressed(BuildContext context) async {
     var res = AuthServices().loginUser(
+      context: context,
       username: _username,
       password: _password,
     );
     if(await res){
+      // if(!mounted) return;
       showSnackBar(context, "Login Successful");
       _controller.success();
-      await Future.delayed(const Duration(seconds: 2));
+      await Future.delayed(const Duration(milliseconds: 1500));
       Navigator.pushReplacementNamed(context, ChatSection.routeName);
     } else {
       showSnackBar(context, "Error: User doesn't exists");
       _controller.error();
-      await Future.delayed(const Duration(seconds: 2));
+      await Future.delayed(const Duration(milliseconds: 1500));
       _controller.reset();
     }
   }
@@ -92,7 +92,7 @@ class _LoginPageState extends State<LoginPage> {
                         controller: _controller,
                         onPressed: () => loginBtnPressed(context),
                         animateOnTap: true,
-                        height: 54,
+                        height: 52,
                         elevation: 3,
                         successColor: Colors.green,
                         color: Theme.of(context).cardColor,
