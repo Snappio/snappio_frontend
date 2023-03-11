@@ -39,7 +39,7 @@ class _MyAppState extends State<MyApp> {
       darkTheme: Themes.darkMode(context),
       onGenerateRoute: (settings) => generateRoute(settings),
       home: Provider.of<UserProvider>(context, listen: false)
-              .user.access!.isNotEmpty
+              .user!.access!.isNotEmpty
           ? const ChatSection()
           : const LoginPage(),
     );
