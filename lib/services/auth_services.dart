@@ -18,15 +18,6 @@ class AuthServices {
     required String password,
   }) async {
     try {
-      User user = User(
-        id: 0,
-        username: username,
-        email: email,
-        name: name,
-        password: password,
-        access: '',
-      );
-
       Response response = await _dio.post(
         "${_baseUrl}users/",
         data: {
