@@ -1,13 +1,10 @@
 import 'dart:core';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
-import 'package:snappio_frontend/screens/chat_section.dart';
 import 'package:snappio_frontend/screens/login_page.dart';
 import 'package:snappio_frontend/themes.dart';
 import 'package:snappio_frontend/services/auth_services.dart';
 import '../constants/snackbar.dart';
-import '../services/auth_services.dart';
 
 class SignupPage extends StatefulWidget {
   static const String routeName = "/signup";
@@ -37,6 +34,7 @@ class _SignupPageState extends State<SignupPage> {
     if (_formKey.currentState!.validate()) {
       setState(() {});
       var res = AuthServices().signupUser(
+        context: context,
         username: _username,
         email: _email,
         name: _name,
@@ -44,16 +42,21 @@ class _SignupPageState extends State<SignupPage> {
       );
 
       if(await res){
-        showSnackBar(context, "Success: Account created");
         _controller.success();
-        await Future.delayed(const Duration(seconds: 2));
-        Navigator.pushReplacementNamed(context, ChatSection.routeName);
+        showSnackBar(context, "Success: Account created");
+        await Future.delayed(const Duration(milliseconds: 1500));
+        Navigator.pushNamedAndRemoveUntil(context, LoginPage.routeName, (route) => false);
+        showSnackBar(context, "Please login to the new account");
       } else {
-        showSnackBar(context, "Error: User already exists");
         _controller.error();
-        await Future.delayed(const Duration(seconds: 2));
+        showSnackBar(context, "Error: User already exists");
+        await Future.delayed(const Duration(milliseconds: 1500));
         _controller.reset();
       }
+    } else {
+      _controller.error();
+      await Future.delayed(const Duration(milliseconds: 500));
+      _controller.reset();
     }
   }
 
@@ -171,7 +174,7 @@ class _SignupPageState extends State<SignupPage> {
                     controller: _controller,
                     onPressed: () => signupBtnPressed(context),
                     animateOnTap: true,
-                    height: 54,
+                    height: 52,
                     elevation: 3,
                     successColor: Colors.green,
                     color: Theme.of(context).cardColor,
@@ -185,8 +188,7 @@ class _SignupPageState extends State<SignupPage> {
                     children: [
                       const Text("Already have an account? "),
                       InkWell(
-                        onTap: () => Navigator.pushReplacementNamed(
-                            context, LoginPage.routeName),
+                        onTap: () => Navigator.pop(context),
                         child: const Text(" Sign In",
                           style: TextStyle(
                               fontWeight: FontWeight.bold,

@@ -14,6 +14,7 @@ class User {
   String? name;
   String? password;
   String? access;
+  List? posts;
 
   User({
     this.id,
@@ -22,6 +23,7 @@ class User {
     this.name,
     this.password,
     this.access,
+    this.posts,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
@@ -31,6 +33,7 @@ class User {
     name: json["name"],
     password: json["password"],
     access: json["access"],
+    posts: json["posts"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -40,5 +43,6 @@ class User {
     "name": name,
     "password": password,
     "access": access,
+    "posts": posts,
   };
 }

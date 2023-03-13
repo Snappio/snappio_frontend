@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:snappio_frontend/constants/snackbar.dart';
@@ -7,8 +5,6 @@ import 'package:snappio_frontend/screens/chat_section.dart';
 import 'package:snappio_frontend/screens/signup_page.dart';
 import 'package:snappio_frontend/services/auth_services.dart';
 import 'package:snappio_frontend/themes.dart';
-
-import '../services/auth_services.dart';
 
 class LoginPage extends StatefulWidget {
   static const String routeName = "/login";
@@ -25,24 +21,26 @@ class _LoginPageState extends State<LoginPage> {
 
   void loginBtnPressed(BuildContext context) async {
     var res = AuthServices().loginUser(
+      context: context,
       username: _username,
       password: _password,
     );
+
     if(await res){
-      showSnackBar(context, "Login Successful");
       _controller.success();
-      await Future.delayed(const Duration(seconds: 2));
-      Navigator.pushReplacementNamed(context, ChatSection.routeName);
+      showSnackBar(context, "Login Successful");
+      await Future.delayed(const Duration(milliseconds: 1500));
+      Navigator.pushNamedAndRemoveUntil(context, ChatSection.routeName, (route) => false);
     } else {
-      showSnackBar(context, "Error: User doesn't exists");
       _controller.error();
-      await Future.delayed(const Duration(seconds: 2));
+      showSnackBar(context, "Error: User doesn't exists");
+      await Future.delayed(const Duration(milliseconds: 1500));
       _controller.reset();
     }
   }
   
   void signupTextPressed() =>
-    Navigator.pushReplacementNamed(context, SignupPage.routeName);
+    Navigator.pushNamed(context, SignupPage.routeName);
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                         controller: _controller,
                         onPressed: () => loginBtnPressed(context),
                         animateOnTap: true,
-                        height: 54,
+                        height: 52,
                         elevation: 3,
                         successColor: Colors.green,
                         color: Theme.of(context).cardColor,
@@ -106,7 +104,8 @@ class _LoginPageState extends State<LoginPage> {
                       children: [
                         const Text("Don't have an account? "),
                         InkWell(
-                          onTap: signupTextPressed,
+                          onTap: () => Navigator.pushNamed(context,
+                              SignupPage.routeName),
                           child: const Text(" Sign Up",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,

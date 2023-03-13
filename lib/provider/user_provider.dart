@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
 import 'package:snappio_frontend/models/user_model.dart';
 
 class UserProvider extends ChangeNotifier {
