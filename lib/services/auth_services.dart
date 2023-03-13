@@ -6,11 +6,12 @@ import 'package:dio/dio.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:snappio_frontend/constants/snackbar.dart';
+import 'package:snappio_frontend/main.dart';
 import 'package:snappio_frontend/models/user_model.dart';
 import 'package:snappio_frontend/provider/user_provider.dart';
 
 class AuthServices {
-  final String _baseUrl = "http://64.227.150.135/api/v1/";
+  final String _baseUrl = "https://api-snappio.onrender.com/api/v1/";
   final Dio _dio = Dio(BaseOptions(
     validateStatus: (status) => status! < 500,
   ));
@@ -34,13 +35,9 @@ class AuthServices {
         data: reqData,
       );
 
-      print(response.data);
-
       if(response.statusCode! < 300) {
         final User user = User.fromJson(response.data);
-        SharedPreferences prefsid = await SharedPreferences.getInstance();
         Provider.of<UserProvider>(context, listen: false).setUser(user);
-        await prefsid.setInt("x-uid", user.id!);
         return true;
       }
       else {
@@ -48,8 +45,7 @@ class AuthServices {
         return false;
       }
     } catch (e) {
-      // log(e.toString());
-      print(e.toString());
+      log(e.toString());
       showSnackBar(context, "Server Error 502");
       return false;
     }
@@ -67,37 +63,63 @@ class AuthServices {
           "password": password,
         },
       );
+
       if(response.statusCode! < 300) {
+        final User user = User.fromJson(response.data);
         SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString("x-auth", jsonDecode(response.data)["access"]);
+        await prefs.setString("x-auth", user.access!);
+        Provider.of<UserProvider>(context, listen: false).setUser(user);
         return true;
-      } else {
+      }
+      else {
         print(response.statusCode.toString());
         return false;
       }
     } catch(e) {
-      // log(e.toString());
-      print(e.toString());
+      log(e.toString());
       showSnackBar(context, "Server Error 502");
       return false;
     }
   }
 
   void getUserData (BuildContext context) async {
-    try {
-      SharedPreferences prefsid = await SharedPreferences.getInstance();
-      int? uid  = prefsid.getInt("x-uid");
-      var userRes = await _dio.get("${_baseUrl}users/${uid}/");
-      var userProvider = Provider.of<UserProvider>(context, listen: false);
-      userProvider.setUser(userRes.data);
-
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? access = prefs.getString("x-auth");
-      if(access==null) prefs.setString("x-auth", "");
-      Provider.of<UserProvider>(context, listen: false).setUser(User.fromJson(jsonDecode(access!)));
+      if(access != null){
+        Response  res = await _dio.get("${_baseUrl}users/profile/",
+            options: Options(
+                headers: {
+                  'Authorization': 'Bearer ${access}'
+                }
+            )
+        );
+        if(res .statusCode! < 300){
+          final User user = User.fromJson(res.data);
+          Provider.of<UserProvider>(context, listen: false).setUser(user);
+          Navigator.of(context).pushNamedAndRemoveUntil('/allChats',
+                  (Route<dynamic> route) => false);
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Please Login"))
+          );
+          prefs.remove('x-auth');
+          Navigator.of(context).pushNamedAndRemoveUntil('/login',
+                  (Route<dynamic> route) => false);
+        }
+      }
+      else {
+        Navigator.of(context).pushNamedAndRemoveUntil('/login',
+                (Route<dynamic> route) => false);
+      }
     }
-    catch (e) {
-      log(e.toString());
-    }
+
+  Future<void> logout(BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('x-auth');
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Please Login"))
+    );
+    Navigator.of(context).pushNamedAndRemoveUntil('/login',
+            (Route<dynamic> route) => false);
   }
 }

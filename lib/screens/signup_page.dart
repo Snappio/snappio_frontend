@@ -55,8 +55,10 @@ class _SignupPageState extends State<SignupPage> {
         await Future.delayed(const Duration(milliseconds: 1500));
         _controller.reset();
       }
+    } else {
+      await Future.delayed(const Duration(seconds: 1));
+      _controller.reset();
     }
-    _controller.reset();
   }
 
   @override

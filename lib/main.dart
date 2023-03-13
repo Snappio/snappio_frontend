@@ -8,11 +8,10 @@ import 'package:snappio_frontend/themes.dart';
 import 'package:snappio_frontend/screens/login_page.dart';
 
 void main() {
-  runApp(MultiProvider(
-    providers: [ChangeNotifierProvider(create: (context) => UserProvider())],
-    child: const MyApp(),
-  ));
+  runApp(const MyApp());
 }
+
+GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -26,22 +25,24 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    authServices.getUserData(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: "Snappio",
-      themeMode: ThemeMode.system,
-      theme: Themes.lightMode(context),
-      darkTheme: Themes.darkMode(context),
-      onGenerateRoute: (settings) => generateRoute(settings),
-      home: Provider.of<UserProvider>(context, listen: false)
-              .user!.access!.isNotEmpty
-          ? const ChatSection()
-          : const LoginPage(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserProvider())
+      ],
+      child: MaterialApp(
+        scaffoldMessengerKey: scaffoldMessengerKey,
+        debugShowCheckedModeBanner: false,
+        title: "Snappio",
+        themeMode: ThemeMode.system,
+        theme: Themes.lightMode(context),
+        darkTheme: Themes.darkMode(context),
+        onGenerateRoute: (settings) => generateRoute(settings),
+        initialRoute: '/splashScreen',
+      ),
     );
   }
 }
