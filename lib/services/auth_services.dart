@@ -6,9 +6,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:snappio_frontend/constants/snackbar.dart';
 import 'package:snappio_frontend/models/user_model.dart';
 import 'package:snappio_frontend/provider/user_provider.dart';
+import 'package:snappio_frontend/screens/chat_section.dart';
+import 'package:snappio_frontend/screens/login_page.dart';
 
 class AuthServices {
-  final String _baseUrl = "https://api-snappio.onrender.com/api/v1/";
+  final String _baseUrl = "http://64.227.150.135/api/v1/";
   final Dio _dio = Dio(BaseOptions(
     validateStatus: (status) => status! < 500,
   ));
@@ -72,6 +74,38 @@ class AuthServices {
       log(e.toString());
       showSnackBar(context, "Server Error 502");
       return false;
+    }
+  }
+
+  Future<void> getUserData(BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? access = prefs.getString("x-auth");
+
+    if(access != null) {
+      Response res = await _dio.get("${_baseUrl}users/profile/",
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $access',
+          }
+        )
+      );
+
+      if(res.statusCode! < 300) {
+        User user = User.fromJson(res.data);
+        Provider.of<UserProvider>(context, listen: false).setUser(user);
+        Navigator.pushNamedAndRemoveUntil(context,
+            ChatSection.routeName, (route) => false);
+      } else {
+        prefs.remove("x-auth");
+        showSnackBar(context, "Something went wrong\nPlease login again");
+        Navigator.pushNamedAndRemoveUntil(context,
+            LoginPage.routeName, (route) => false);
+      }
+    }
+    else{
+      await Future.delayed(const Duration(seconds: 1));
+      Navigator.pushNamedAndRemoveUntil(context,
+          LoginPage.routeName, (route) => false);
     }
   }
 }

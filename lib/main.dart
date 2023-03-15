@@ -33,7 +33,7 @@ class _MyAppState extends State<MyApp> {
         darkTheme: Themes.darkMode(context),
         title: "Snappio",
         onGenerateRoute: (settings) => generateRoute(settings),
-        initialRoute: '/login',
+        initialRoute: '/splash',
       ),
     );
   }

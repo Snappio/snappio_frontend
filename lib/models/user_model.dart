@@ -12,7 +12,6 @@ class User {
   String? username;
   String? email;
   String? name;
-  String? password;
   String? access;
   List? posts;
 
@@ -21,7 +20,6 @@ class User {
     this.username,
     this.email,
     this.name,
-    this.password,
     this.access,
     this.posts,
   });
@@ -31,7 +29,6 @@ class User {
     username: json["username"],
     email: json["email"],
     name: json["name"],
-    password: json["password"],
     access: json["access"],
     posts: json["posts"],
   );
@@ -41,7 +38,6 @@ class User {
     "username": username,
     "email": email,
     "name": name,
-    "password": password,
     "access": access,
     "posts": posts,
   };
