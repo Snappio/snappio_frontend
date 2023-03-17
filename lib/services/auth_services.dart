@@ -6,8 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:snappio_frontend/constants/snackbar.dart';
 import 'package:snappio_frontend/models/user_model.dart';
 import 'package:snappio_frontend/provider/user_provider.dart';
-import 'package:snappio_frontend/screens/chat_section.dart';
 import 'package:snappio_frontend/screens/login_page.dart';
+import 'package:snappio_frontend/widgets/bottom_navbar.dart';
 
 class AuthServices {
   final String _baseUrl = "http://64.227.150.135/api/v1/";
@@ -94,7 +94,7 @@ class AuthServices {
         User user = User.fromJson(res.data);
         Provider.of<UserProvider>(context, listen: false).setUser(user);
         Navigator.pushNamedAndRemoveUntil(context,
-            ChatSection.routeName, (route) => false);
+            BottomNavBar.routeName, (route) => false);
       } else {
         prefs.remove("x-auth");
         showSnackBar(context, "Something went wrong\nPlease login again");

@@ -11,12 +11,13 @@ class Themes {
     ),
     canvasColor: lightBg,
     cardColor: lightAccent,
-      splashColor: darkBg,
+    primaryColor: Colors.indigoAccent,
+    splashColor: darkBg,
     appBarTheme: const AppBarTheme(
       color: lightAccent,
       iconTheme: IconThemeData(color: darkBg),
       titleTextStyle: TextStyle(
-        color: Color(0xff0e0d18),
+        color: darkBg,
         fontFamily: "Rubik",
         fontWeight: FontWeight.bold,
         fontSize: 21.0
@@ -25,7 +26,7 @@ class Themes {
   );
 
   static ThemeData darkMode(BuildContext context) => ThemeData(
-      primarySwatch: Colors.grey,
+      primarySwatch: Colors.deepPurple,
       brightness: Brightness.dark,
       fontFamily: "Rubik",
       textTheme: Theme.of(context).textTheme.apply(
@@ -35,6 +36,7 @@ class Themes {
       ),
       canvasColor: darkBg,
       cardColor: darkAccent,
+      primaryColor: Colors.white60,
       splashColor: lightBg,
       appBarTheme: const AppBarTheme(
         color: darkAccent,

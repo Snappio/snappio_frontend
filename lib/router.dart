@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:snappio_frontend/screens/chat_section.dart';
 import 'package:snappio_frontend/screens/login_page.dart';
 import 'package:snappio_frontend/screens/signup_page.dart';
 import 'package:snappio_frontend/screens/splash_screen.dart';
+import 'package:snappio_frontend/widgets/bottom_navbar.dart';
 
 Route<dynamic> generateRoute(RouteSettings routeSettings){
   switch (routeSettings.name) {
@@ -19,9 +19,10 @@ Route<dynamic> generateRoute(RouteSettings routeSettings){
       return MaterialPageRoute(
           settings: routeSettings,
           builder: (_) => const SignupPage());
-    case ChatSection.routeName:
+    case BottomNavBar.routeName:
       return MaterialPageRoute(
-          builder: (_) => const ChatSection());
+          settings: routeSettings,
+          builder: (_) => const BottomNavBar());
     default:
       return MaterialPageRoute(
         settings: routeSettings,
