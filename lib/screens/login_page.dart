@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:snappio_frontend/constants/snackbar.dart';
 import 'package:snappio_frontend/screens/signup_page.dart';
+import 'package:snappio_frontend/screens/splash_screen.dart';
 import 'package:snappio_frontend/widgets/bottom_navbar.dart';
 import 'package:snappio_frontend/services/auth_services.dart';
 import 'package:snappio_frontend/themes.dart';
@@ -29,8 +30,8 @@ class _LoginPageState extends State<LoginPage> {
     if(await res){
       _controller.success();
       showSnackBar(context, "Login Successful");
-      await Future.delayed(const Duration(milliseconds: 1500));
-      Navigator.pushNamedAndRemoveUntil(context, BottomNavBar.routeName, (route) => false);
+      await Future.delayed(const Duration(milliseconds: 1000));
+      Navigator.pushNamedAndRemoveUntil(context, SplashScreen.routeName, (route) => false);
     } else {
       _controller.error();
       showSnackBar(context, "Error: User doesn't exists");

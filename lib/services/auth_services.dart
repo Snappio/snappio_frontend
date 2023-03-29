@@ -35,15 +35,13 @@ class AuthServices {
       );
 
       if(response.statusCode! < 300){
-        final User user = User.fromJson(response.data);
-        Provider.of<UserProvider>(context, listen: false).setUser(user);
         return true;
       } else {
         return false;
       }
     } catch (e) {
       log(e.toString());
-      showSnackBar(context, "Server Error 502");
+      showSnackBar(context, "Server Error");
       return false;
     }
   }
@@ -72,7 +70,7 @@ class AuthServices {
       }
     } catch(e) {
       log(e.toString());
-      showSnackBar(context, "Server Error 502");
+      showSnackBar(context, "Server Error");
       return false;
     }
   }
@@ -106,6 +104,41 @@ class AuthServices {
       await Future.delayed(const Duration(seconds: 1));
       Navigator.pushNamedAndRemoveUntil(context,
           LoginPage.routeName, (route) => false);
+    }
+  }
+
+  Future<void> logout(BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('x-auth');
+    showSnackBar(context, "Please Login");
+    Navigator.of(context).pushNamedAndRemoveUntil('/login',
+            (Route<dynamic> route) => false);
+  }
+
+  Future<void> deleteUser(BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? access = prefs.getString("x-auth");
+
+    try {
+      Response res = await _dio.delete("${_baseUrl}users/profile/",
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $access',
+            }
+        ));
+
+      if(res.statusCode! < 300) {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.remove('x-auth');
+        showSnackBar(context, "Account deleted successfully");
+        Navigator.of(context).pushNamedAndRemoveUntil('/login',
+                (Route<dynamic> route) => false);
+      } else {
+        showSnackBar(context, "Something went wrong\nTry again later");
+      }
+    } catch(e) {
+      log(e.toString());
+      showSnackBar(context, "Server Error\nTry again later");
     }
   }
 }
