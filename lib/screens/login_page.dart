@@ -3,7 +3,6 @@ import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:snappio_frontend/constants/snackbar.dart';
 import 'package:snappio_frontend/screens/signup_page.dart';
 import 'package:snappio_frontend/screens/splash_screen.dart';
-import 'package:snappio_frontend/widgets/bottom_navbar.dart';
 import 'package:snappio_frontend/services/auth_services.dart';
 import 'package:snappio_frontend/themes.dart';
 
@@ -31,7 +30,8 @@ class _LoginPageState extends State<LoginPage> {
       _controller.success();
       showSnackBar(context, "Login Successful");
       await Future.delayed(const Duration(milliseconds: 1000));
-      Navigator.pushNamedAndRemoveUntil(context, SplashScreen.routeName, (route) => false);
+      Navigator.pushNamedAndRemoveUntil(context,
+          SplashScreen.routeName, (route) => false);
     } else {
       _controller.error();
       showSnackBar(context, "Error: User doesn't exists");
@@ -39,9 +39,6 @@ class _LoginPageState extends State<LoginPage> {
       _controller.reset();
     }
   }
-  
-  void signupTextPressed() =>
-    Navigator.pushNamed(context, SignupPage.routeName);
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +65,6 @@ class _LoginPageState extends State<LoginPage> {
                           prefixIcon: Icon(Icons.account_circle_rounded),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(30))),
-                          // filled: true,
                           contentPadding: EdgeInsets.symmetric(vertical: 18, horizontal: 15)),
                         onChanged: (value) => _username = value,
                       ),

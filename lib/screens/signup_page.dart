@@ -88,11 +88,10 @@ class _SignupPageState extends State<SignupPage> {
                         labelText: "Name",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(25))),
-                        // filled: true,
                         contentPadding: EdgeInsets.all(15)),
-                        onChanged: (value) => _name = value,
                         validator: (value) {
                           if (value!.isEmpty) return "Please provide your name";
+                          _name = value;
                           return null;
                         },
                       ),
@@ -103,11 +102,10 @@ class _SignupPageState extends State<SignupPage> {
                           labelText: "Username",
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(25))),
-                          // filled: true,
                           contentPadding: EdgeInsets.all(15)),
-                          onChanged: (value) => _username = value,
                           validator: (value) {
-                            if (value!.length < 4 || value.length > 10) {
+                            _username = value!;
+                            if (value.length < 4 || value.length > 10) {
                               return "Username should be 4-10 characters long";
                             } else if(!validUsername()) {
                               return "Only lowercase alphabets and numbers supported";
@@ -123,7 +121,6 @@ class _SignupPageState extends State<SignupPage> {
                           border: OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(25))),
-                          // filled: true,
                           contentPadding: EdgeInsets.all(15),
                         ),
                         keyboardType: TextInputType.emailAddress,
@@ -140,7 +137,6 @@ class _SignupPageState extends State<SignupPage> {
                             border: OutlineInputBorder(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(25))),
-                            // filled: true,
                             contentPadding: EdgeInsets.all(15)),
                         obscureText: true,
                         onChanged: (value) => _password = value,
@@ -159,7 +155,6 @@ class _SignupPageState extends State<SignupPage> {
                             border: OutlineInputBorder(
                                 borderRadius:
                                 BorderRadius.all(Radius.circular(25))),
-                            // filled: true,
                             contentPadding: EdgeInsets.all(15)),
                         obscureText: true,
                         validator: (value) {

@@ -30,6 +30,7 @@ class _ProfileSectionState extends State<ProfileSection> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Snappio"),
+        centerTitle: true,
         actions: [
           PopupMenuButton<int>(
             onSelected: itemClicked,
@@ -53,7 +54,11 @@ class _ProfileSectionState extends State<ProfileSection> {
           const SizedBox(height: 20),
           RichText(text: TextSpan(
             text: user!.name,
-            style: const TextStyle(fontFamily: "Rubik",fontSize: 21)
+            style: const TextStyle(
+              fontFamily: "Rubik",
+              fontSize: 21,
+              color: Colors.blueGrey,
+            )
           )),
           RichText(text: TextSpan(
               text: user.username,

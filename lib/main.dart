@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:snappio_frontend/provider/msg_provider.dart';
 import 'package:snappio_frontend/provider/user_provider.dart';
 import 'package:snappio_frontend/router.dart';
 import 'package:snappio_frontend/themes.dart';
@@ -24,7 +25,8 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => UserProvider())
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => MsgProvider())
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

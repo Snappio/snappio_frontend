@@ -10,7 +10,7 @@ import 'package:snappio_frontend/screens/login_page.dart';
 import 'package:snappio_frontend/widgets/bottom_navbar.dart';
 
 class AuthServices {
-  final String _baseUrl = "http://64.227.150.135/api/v1/";
+  final String _baseUrl = "https://api-snappio.onrender.com/api/v1/";
   final Dio _dio = Dio(BaseOptions(
     validateStatus: (status) => status! < 500,
   ));

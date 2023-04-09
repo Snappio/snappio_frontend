@@ -14,8 +14,8 @@ class _SplashScreenState extends State<SplashScreen> {
   final AuthServices authServices = AuthServices();
   @override
   void initState() {
-    super.initState();
     authServices.getUserData(context);
+    super.initState();
   }
   @override
   Widget build(BuildContext context) {
