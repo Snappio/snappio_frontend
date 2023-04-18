@@ -8,4 +8,9 @@ class MsgProvider extends ChangeNotifier {
     msglist.add(msgdata);
     notifyListeners();
   }
+
+  void clearList() {
+    msglist.clear();
+    notifyListeners();
+  }
 }

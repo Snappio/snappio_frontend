@@ -20,20 +20,20 @@ class _GroupChatState extends State<GroupChat> {
 
   @override
   void initState() {
+    wsServices.clearMsg(context);
     wsServices.connectRoomSocket(context, roomId, _scroll);
     super.initState();
   }
 
   void sendMsg() {
-    if(_controller.text != ""){
+    if (_controller.text != "") {
       wsServices.sendMsg(context, _controller.text);
       _controller.clear();
     }
   }
 
   @override
-  void dispose(){
-    wsServices.channel.sink.close();
+  void dispose() {
     super.dispose();
   }
 
@@ -44,43 +44,47 @@ class _GroupChatState extends State<GroupChat> {
     return Scaffold(
       appBar: AppBar(
         leading: const CircleAvatar(
-            backgroundImage: AssetImage("assets/images/profile_avatar.png")
-        ),
+            backgroundImage: AssetImage("assets/images/profile_avatar.png")),
         title: Text(roomId),
       ),
       body: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14,vertical: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
         child: Column(
           children: [
             Expanded(
               child: ListView.builder(
                 controller: _scroll,
                 physics: const BouncingScrollPhysics(
-                    parent: AlwaysScrollableScrollPhysics()
-                ),
+                    parent: AlwaysScrollableScrollPhysics()),
                 itemCount: msglist.length + 1,
                 itemBuilder: (context, index) {
-                  if(index == msglist.length){
+                  if (index == msglist.length) {
                     return const SizedBox(height: 60);
                   }
                   return SingleChildScrollView(
                     child: ChatBubble(
                       clipper: ChatBubbleClipper5(
-                        type: (msglist[index].isme!) ? BubbleType.sendBubble
+                        type: (msglist[index].isme!)
+                            ? BubbleType.sendBubble
                             : BubbleType.receiverBubble,
                       ),
-                      alignment: (msglist[index].isme!) ? Alignment.topRight
+                      alignment: (msglist[index].isme!)
+                          ? Alignment.topRight
                           : Alignment.topLeft,
                       margin: const EdgeInsets.only(top: 14),
-                      backGroundColor: (msglist[index].isme!) ? Colors.indigoAccent
+                      backGroundColor: (msglist[index].isme!)
+                          ? Colors.indigoAccent
                           : Colors.greenAccent,
                       child: Container(
                         constraints: BoxConstraints(
                           maxWidth: MediaQuery.of(context).size.width * 0.7,
                         ),
-                        child: Text(msglist[index].message!,
-                          style: TextStyle(color: (msglist[index].isme!)
-                              ? Colors.white : Colors.black),
+                        child: Text(
+                          msglist[index].message!,
+                          style: TextStyle(
+                              color: (msglist[index].isme!)
+                                  ? Colors.white
+                                  : Colors.black),
                         ),
                       ),
                     ),
@@ -90,15 +94,15 @@ class _GroupChatState extends State<GroupChat> {
             ),
             Row(
               children: [
-                Expanded(child: TextFormField(
+                Expanded(
+                    child: TextFormField(
                   controller: _controller,
                   decoration: const InputDecoration(
                     hintText: "Type message",
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30))
-                    ),
-                    contentPadding: EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 18),
+                        borderRadius: BorderRadius.all(Radius.circular(30))),
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 16, vertical: 18),
                   ),
                 )),
                 const SizedBox(width: 8),

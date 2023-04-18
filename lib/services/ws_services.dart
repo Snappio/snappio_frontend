@@ -11,34 +11,26 @@ class WSServices {
   late IOWebSocketChannel channel;
   final String _baseurl = "wss://api-snappio.onrender.com/ws/";
 
-  connectPrivateSocket(
-    BuildContext context,
-    String userid,
-    String token,
-    ScrollController scroll )
-  {
-    try{
-      channel = IOWebSocketChannel.connect(
-        "${_baseurl}user/$userid/",
-        headers: {
-          "Authorization": "Bearer $token",
-        }
-      );
+  connectPrivateSocket(BuildContext context, String userid, String token,
+      ScrollController scroll) {
+    try {
+      channel =
+          IOWebSocketChannel.connect("${_baseurl}user/$userid/", headers: {
+        "Authorization": "Bearer $token",
+      });
       channel.stream.listen((message) {
         var jsonData = jsonDecode(message);
-        MessageData msgdata = MessageData(
-            message: jsonData["message"],
-            isme: false
-        );
+        MessageData msgdata =
+            MessageData(message: jsonData["message"], isme: false);
         Provider.of<MsgProvider>(context, listen: false).addMsg(msgdata);
         scroll.jumpTo(scroll.position.maxScrollExtent);
-      },
-        onError: (error) {
-          showSnackBar(context, "Something went wrong...check username");
-          Navigator.of(context).pop();
-          log(error.toString());
-        }
-      );
+      }, onDone: () {
+        connectPrivateSocket(context, userid, token, scroll);
+      }, onError: (error) {
+        showSnackBar(context, "Something went wrong...check username");
+        Navigator.of(context).pop();
+        log(error.toString());
+      });
     } catch (e) {
       showSnackBar(context, "Something went wrong...check username");
       Navigator.of(context).pop();
@@ -47,28 +39,22 @@ class WSServices {
   }
 
   connectRoomSocket(
-    BuildContext context,
-    String roomId,
-    ScrollController scroll )
-  {
-    try{
+      BuildContext context, String roomId, ScrollController scroll) {
+    try {
       channel = IOWebSocketChannel.connect("${_baseurl}rooms/$roomId/");
       channel.stream.listen((message) {
-        print(message);
         var jsonData = jsonDecode(message);
-        MessageData msgdata = MessageData(
-          message: jsonData["message"],
-          isme: false
-        );
+        MessageData msgdata =
+            MessageData(message: jsonData["message"], isme: false);
         Provider.of<MsgProvider>(context, listen: false).addMsg(msgdata);
         scroll.jumpTo(scroll.position.maxScrollExtent);
-      },
-        onError: (error) {
-          showSnackBar(context, "Something went wrong...change room id");
-          Navigator.of(context).pop();
-          log(error.toString());
-        }
-      );
+      }, onDone: () {
+        connectRoomSocket(context, roomId, scroll);
+      }, onError: (error) {
+        showSnackBar(context, "Something went wrong...change room id");
+        Navigator.of(context).pop();
+        log(error.toString());
+      });
     } catch (e) {
       showSnackBar(context, "Something went wrong...change room id");
       Navigator.of(context).pop();
@@ -87,5 +73,9 @@ class WSServices {
     );
     Provider.of<MsgProvider>(context, listen: false).addMsg(msgdata);
     channel.sink.add(message);
+  }
+
+  void clearMsg(BuildContext context) {
+    Provider.of<MsgProvider>(context, listen: false).clearList();
   }
 }
