@@ -59,11 +59,13 @@ class AuthServices {
         },
       );
       if(response.statusCode! < 300){
+
         final User user = User.fromJson(response.data);
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString("x-auth", user.access!);
         Provider.of<UserProvider>(context, listen: false).setUser(user);
         return true;
+        
       }
       else {
         return false;
@@ -89,11 +91,14 @@ class AuthServices {
       );
 
       if(res.statusCode! < 300) {
+
         User user = User.fromJson(res.data);
         Provider.of<UserProvider>(context, listen: false).setUser(user);
         Navigator.pushNamedAndRemoveUntil(context,
             BottomNavBar.routeName, (route) => false);
+      
       } else {
+
         prefs.remove("x-auth");
         showSnackBar(context, "Something went wrong\nPlease login again");
         Navigator.pushNamedAndRemoveUntil(context,
@@ -108,11 +113,13 @@ class AuthServices {
   }
 
   Future<void> logout(BuildContext context) async {
+
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove('x-auth');
     showSnackBar(context, "Please Login");
     Navigator.of(context).pushNamedAndRemoveUntil('/login',
             (Route<dynamic> route) => false);
+  
   }
 
   Future<void> deleteUser(BuildContext context) async {
@@ -128,11 +135,13 @@ class AuthServices {
         ));
 
       if(res.statusCode! < 300) {
+
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.remove('x-auth');
         showSnackBar(context, "Account deleted successfully");
         Navigator.of(context).pushNamedAndRemoveUntil('/login',
                 (Route<dynamic> route) => false);
+      
       } else {
         showSnackBar(context, "Something went wrong\nTry again later");
       }

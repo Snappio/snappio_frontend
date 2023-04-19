@@ -18,23 +18,29 @@ class WSServices {
           IOWebSocketChannel.connect("${_baseurl}user/$userid/", headers: {
         "Authorization": "Bearer $token",
       });
+
       channel.stream.listen((message) {
-        var jsonData = jsonDecode(message);
-        MessageData msgdata =
-            MessageData(message: jsonData["message"], isme: false);
-        Provider.of<MsgProvider>(context, listen: false).addMsg(msgdata);
+
+        Map<String, dynamic> jsonData = jsonDecode(message);
+        var msgData = MsgData.fromJson(jsonData);
+        Provider.of<MsgProvider>(context, listen: false).addMsg(msgData);
         scroll.jumpTo(scroll.position.maxScrollExtent);
+
       }, onDone: () {
         connectPrivateSocket(context, userid, token, scroll);
       }, onError: (error) {
+
         showSnackBar(context, "Something went wrong...check username");
         Navigator.of(context).pop();
         log(error.toString());
+
       });
     } catch (e) {
+
       showSnackBar(context, "Something went wrong...check username");
       Navigator.of(context).pop();
       log(e.toString());
+
     }
   }
 
@@ -42,37 +48,56 @@ class WSServices {
       BuildContext context, String roomId, ScrollController scroll) {
     try {
       channel = IOWebSocketChannel.connect("${_baseurl}rooms/$roomId/");
+
       channel.stream.listen((message) {
-        var jsonData = jsonDecode(message);
-        MessageData msgdata =
-            MessageData(message: jsonData["message"], isme: false);
-        Provider.of<MsgProvider>(context, listen: false).addMsg(msgdata);
+
+        Map<String, dynamic> jsonData = jsonDecode(message);
+        var msgData = MsgData.fromJson(jsonData);
+        Provider.of<MsgProvider>(context, listen: false).addMsg(msgData);
         scroll.jumpTo(scroll.position.maxScrollExtent);
+
       }, onDone: () {
         connectRoomSocket(context, roomId, scroll);
       }, onError: (error) {
+
         showSnackBar(context, "Something went wrong...change room id");
         Navigator.of(context).pop();
         log(error.toString());
       });
     } catch (e) {
+
       showSnackBar(context, "Something went wrong...change room id");
       Navigator.of(context).pop();
       log(e.toString());
+
     }
   }
 
   Future<void> sendMsg(
     BuildContext context,
     String textmsg,
+    String username,
+    String time,
+    bool isme,
   ) async {
-    String message = '{"message":"$textmsg"}';
-    MessageData msgdata = MessageData(
-      message: textmsg,
+
+    Map<String, dynamic> messageData = <String, dynamic>{};
+    messageData["message"] = <String, dynamic>{};
+    messageData["message"]["data"] = textmsg;
+    messageData["message"]["user"] = username;
+    messageData["message"]["time"] = time;
+    messageData["message"]["isme"] = isme;
+
+    MsgData msgData = MsgData(
+        message: Message(
+      data: textmsg,
+      user: username,
+      time: time,
       isme: true,
-    );
-    Provider.of<MsgProvider>(context, listen: false).addMsg(msgdata);
-    channel.sink.add(message);
+    ));
+
+    Provider.of<MsgProvider>(context, listen: false).addMsg(msgData);
+    channel.sink.add(jsonEncode(messageData));
   }
 
   void clearMsg(BuildContext context) {

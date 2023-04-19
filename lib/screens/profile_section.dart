@@ -26,7 +26,8 @@ class _ProfileSectionState extends State<ProfileSection> {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<UserProvider>(context).user;
+    final user = Provider.of<UserProvider>(context, listen: true).user;
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text("Snappio"),

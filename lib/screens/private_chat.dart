@@ -32,9 +32,11 @@ class _PrivateChatState extends State<PrivateChat> {
     wsServices.connectPrivateSocket(context, userid, token!, _scroll);
   }
 
-  void sendMsg() {
+  void sendMsg(String user) {
     if (_controller.text != "") {
-      wsServices.sendMsg(context, _controller.text);
+      var dt = DateTime.now();
+      String time = "${dt.hour}:${dt.minute}";
+      wsServices.sendMsg(context, _controller.text, user, time, false);
       _controller.clear();
     }
   }
@@ -66,20 +68,20 @@ class _PrivateChatState extends State<PrivateChat> {
                 itemCount: msglist.length + 1,
                 itemBuilder: (context, index) {
                   if (index == msglist.length) {
-                    return const SizedBox(height: 60);
+                    return const SizedBox(height: 75);
                   }
                   return SingleChildScrollView(
                     child: ChatBubble(
                       clipper: ChatBubbleClipper5(
-                        type: (msglist[index].isme!)
+                        type: (msglist[index].message!.isme!)
                             ? BubbleType.sendBubble
                             : BubbleType.receiverBubble,
                       ),
-                      alignment: (msglist[index].isme!)
+                      alignment: (msglist[index].message!.isme!)
                           ? Alignment.topRight
                           : Alignment.topLeft,
                       margin: const EdgeInsets.only(top: 14),
-                      backGroundColor: (msglist[index].isme!)
+                      backGroundColor: (msglist[index].message!.isme!)
                           ? Colors.indigoAccent
                           : Colors.greenAccent,
                       child: Container(
@@ -87,9 +89,9 @@ class _PrivateChatState extends State<PrivateChat> {
                           maxWidth: MediaQuery.of(context).size.width * 0.7,
                         ),
                         child: Text(
-                          msglist[index].message!,
+                          "${msglist[index].message!.data!}\n${msglist[index].message!.time}",
                           style: TextStyle(
-                              color: (msglist[index].isme!)
+                              color: (msglist[index].message!.isme!)
                                   ? Colors.white
                                   : Colors.black),
                         ),
@@ -115,7 +117,7 @@ class _PrivateChatState extends State<PrivateChat> {
                 const SizedBox(width: 8),
                 FloatingActionButton(
                   onPressed: () {
-                    sendMsg();
+                    sendMsg("YOU");
                     _scroll.jumpTo(_scroll.position.maxScrollExtent);
                   },
                   elevation: 0,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
 import 'package:provider/provider.dart';
 import 'package:snappio_frontend/provider/msg_provider.dart';
+import '../provider/user_provider.dart';
 import '../services/ws_services.dart';
 
 class GroupChat extends StatefulWidget {
@@ -25,9 +26,11 @@ class _GroupChatState extends State<GroupChat> {
     super.initState();
   }
 
-  void sendMsg() {
+  void sendMsg(String username) {
     if (_controller.text != "") {
-      wsServices.sendMsg(context, _controller.text);
+      var dt = DateTime.now();
+      String time = "${dt.hour}:${dt.minute}";
+      wsServices.sendMsg(context, _controller.text, username, time, false);
       _controller.clear();
     }
   }
@@ -40,6 +43,8 @@ class _GroupChatState extends State<GroupChat> {
   @override
   Widget build(BuildContext context) {
     final msglist = Provider.of<MsgProvider>(context, listen: true).msglist;
+    final username =
+        Provider.of<UserProvider>(context, listen: true).user!.name;
 
     return Scaffold(
       appBar: AppBar(
@@ -59,20 +64,20 @@ class _GroupChatState extends State<GroupChat> {
                 itemCount: msglist.length + 1,
                 itemBuilder: (context, index) {
                   if (index == msglist.length) {
-                    return const SizedBox(height: 60);
+                    return const SizedBox(height: 80);
                   }
                   return SingleChildScrollView(
                     child: ChatBubble(
                       clipper: ChatBubbleClipper5(
-                        type: (msglist[index].isme!)
+                        type: (msglist[index].message!.isme!)
                             ? BubbleType.sendBubble
                             : BubbleType.receiverBubble,
                       ),
-                      alignment: (msglist[index].isme!)
+                      alignment: (msglist[index].message!.isme!)
                           ? Alignment.topRight
                           : Alignment.topLeft,
                       margin: const EdgeInsets.only(top: 14),
-                      backGroundColor: (msglist[index].isme!)
+                      backGroundColor: (msglist[index].message!.isme!)
                           ? Colors.indigoAccent
                           : Colors.greenAccent,
                       child: Container(
@@ -80,9 +85,9 @@ class _GroupChatState extends State<GroupChat> {
                           maxWidth: MediaQuery.of(context).size.width * 0.7,
                         ),
                         child: Text(
-                          msglist[index].message!,
+                          "${msglist[index].message!.user}:\n${msglist[index].message!.data!}\n${msglist[index].message!.time}",
                           style: TextStyle(
-                              color: (msglist[index].isme!)
+                              color: (msglist[index].message!.isme!)
                                   ? Colors.white
                                   : Colors.black),
                         ),
@@ -108,7 +113,7 @@ class _GroupChatState extends State<GroupChat> {
                 const SizedBox(width: 8),
                 FloatingActionButton(
                   onPressed: () {
-                    sendMsg();
+                    sendMsg(username!);
                     _scroll.jumpTo(_scroll.position.maxScrollExtent);
                   },
                   elevation: 0,
