@@ -11,8 +11,7 @@ class WSServices {
   late IOWebSocketChannel channel;
   final String _baseurl = "wss://api-snappio.onrender.com/ws/";
 
-  connectPrivateSocket(BuildContext context, String userid, String token,
-      ScrollController scroll) {
+  connectPrivateSocket(BuildContext context, String userid, String token, String username, ScrollController scroll) {
     try {
       channel =
           IOWebSocketChannel.connect("${_baseurl}user/$userid/", headers: {
@@ -20,56 +19,49 @@ class WSServices {
       });
 
       channel.stream.listen((message) {
-
         Map<String, dynamic> jsonData = jsonDecode(message);
         var msgData = MsgData.fromJson(jsonData);
-        Provider.of<MsgProvider>(context, listen: false).addMsg(msgData);
+        if (msgData.message!.user != username) {
+          Provider.of<MsgProvider>(context, listen: false).addMsg(msgData);
+        }
         scroll.jumpTo(scroll.position.maxScrollExtent);
-
       }, onDone: () {
-        connectPrivateSocket(context, userid, token, scroll);
+        connectPrivateSocket(context, userid, token, username, scroll);
       }, onError: (error) {
-
         showSnackBar(context, "Something went wrong...check username");
         Navigator.of(context).pop();
         log(error.toString());
-
       });
     } catch (e) {
-
       showSnackBar(context, "Something went wrong...check username");
       Navigator.of(context).pop();
       log(e.toString());
-
     }
   }
 
-  connectRoomSocket(
-      BuildContext context, String roomId, ScrollController scroll) {
+  connectRoomSocket(BuildContext context, String roomId, String username,
+      ScrollController scroll) {
     try {
       channel = IOWebSocketChannel.connect("${_baseurl}rooms/$roomId/");
 
       channel.stream.listen((message) {
-
         Map<String, dynamic> jsonData = jsonDecode(message);
         var msgData = MsgData.fromJson(jsonData);
-        Provider.of<MsgProvider>(context, listen: false).addMsg(msgData);
+        if (msgData.message!.user != username) {
+          Provider.of<MsgProvider>(context, listen: false).addMsg(msgData);
+        }
         scroll.jumpTo(scroll.position.maxScrollExtent);
-
       }, onDone: () {
-        connectRoomSocket(context, roomId, scroll);
+        connectRoomSocket(context, roomId, username, scroll);
       }, onError: (error) {
-
         showSnackBar(context, "Something went wrong...change room id");
         Navigator.of(context).pop();
         log(error.toString());
       });
     } catch (e) {
-
       showSnackBar(context, "Something went wrong...change room id");
       Navigator.of(context).pop();
       log(e.toString());
-
     }
   }
 
@@ -80,7 +72,6 @@ class WSServices {
     String time,
     bool isme,
   ) async {
-
     Map<String, dynamic> messageData = <String, dynamic>{};
     messageData["message"] = <String, dynamic>{};
     messageData["message"]["data"] = textmsg;

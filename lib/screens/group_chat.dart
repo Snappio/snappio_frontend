@@ -15,6 +15,8 @@ class GroupChat extends StatefulWidget {
 
 class _GroupChatState extends State<GroupChat> {
   late final String roomId = widget.roomName;
+  late final String username =
+      Provider.of<UserProvider>(context, listen: false).user!.name!;
   final WSServices wsServices = WSServices();
   final TextEditingController _controller = TextEditingController();
   final ScrollController _scroll = ScrollController();
@@ -22,11 +24,11 @@ class _GroupChatState extends State<GroupChat> {
   @override
   void initState() {
     wsServices.clearMsg(context);
-    wsServices.connectRoomSocket(context, roomId, _scroll);
+    wsServices.connectRoomSocket(context, roomId, username, _scroll);
     super.initState();
   }
 
-  void sendMsg(String username) {
+  void sendMsg() {
     if (_controller.text != "") {
       var dt = DateTime.now();
       String time = "${dt.hour}:${dt.minute}";
@@ -43,8 +45,6 @@ class _GroupChatState extends State<GroupChat> {
   @override
   Widget build(BuildContext context) {
     final msglist = Provider.of<MsgProvider>(context, listen: true).msglist;
-    final username =
-        Provider.of<UserProvider>(context, listen: true).user!.name;
 
     return Scaffold(
       appBar: AppBar(
@@ -84,12 +84,30 @@ class _GroupChatState extends State<GroupChat> {
                         constraints: BoxConstraints(
                           maxWidth: MediaQuery.of(context).size.width * 0.7,
                         ),
-                        child: Text(
-                          "${msglist[index].message!.user}:\n${msglist[index].message!.data!}\n${msglist[index].message!.time}",
-                          style: TextStyle(
-                              color: (msglist[index].message!.isme!)
-                                  ? Colors.white
-                                  : Colors.black),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("${msglist[index].message!.user!}:",
+                              style: TextStyle(
+                                color: (msglist[index].message!.isme!)
+                                    ? Colors.white60
+                                    : Colors.black54),
+                            ),
+                            Text(msglist[index].message!.data!,
+                              style: TextStyle(
+                                color: (msglist[index].message!.isme!)
+                                    ? Colors.white
+                                    : Colors.black),
+                              textScaleFactor: 1.2,
+                            ),
+                            Text(msglist[index].message!.time!,
+                              style: TextStyle(
+                                color: (msglist[index].message!.isme!)
+                                    ? Colors.white60
+                                    : Colors.black54),
+                              textScaleFactor: 0.75,
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -113,7 +131,7 @@ class _GroupChatState extends State<GroupChat> {
                 const SizedBox(width: 8),
                 FloatingActionButton(
                   onPressed: () {
-                    sendMsg(username!);
+                    sendMsg;
                     _scroll.jumpTo(_scroll.position.maxScrollExtent);
                   },
                   elevation: 0,

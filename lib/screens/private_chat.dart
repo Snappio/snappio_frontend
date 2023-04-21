@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:snappio_frontend/services/ws_services.dart';
 import '../provider/msg_provider.dart';
+import '../provider/user_provider.dart';
 
 class PrivateChat extends StatefulWidget {
   final String userid;
@@ -14,7 +15,9 @@ class PrivateChat extends StatefulWidget {
 }
 
 class _PrivateChatState extends State<PrivateChat> {
-  late String userid = widget.userid;
+  late final String userid = widget.userid;
+  late final String username =
+      Provider.of<UserProvider>(context, listen: false).user!.name!;
   final WSServices wsServices = WSServices();
   final TextEditingController _controller = TextEditingController();
   final ScrollController _scroll = ScrollController();
@@ -29,14 +32,14 @@ class _PrivateChatState extends State<PrivateChat> {
   Future<void> connect() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString("x-auth");
-    wsServices.connectPrivateSocket(context, userid, token!, _scroll);
+    wsServices.connectPrivateSocket(context, userid, token!, username, _scroll);
   }
 
-  void sendMsg(String user) {
+  void sendMsg() {
     if (_controller.text != "") {
       var dt = DateTime.now();
       String time = "${dt.hour}:${dt.minute}";
-      wsServices.sendMsg(context, _controller.text, user, time, false);
+      wsServices.sendMsg(context, _controller.text, username, time, false);
       _controller.clear();
     }
   }
@@ -55,6 +58,7 @@ class _PrivateChatState extends State<PrivateChat> {
         leading: const CircleAvatar(
             backgroundImage: AssetImage("assets/images/profile_avatar.png")),
         title: Text(userid),
+        elevation: 0,
       ),
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
@@ -68,7 +72,7 @@ class _PrivateChatState extends State<PrivateChat> {
                 itemCount: msglist.length + 1,
                 itemBuilder: (context, index) {
                   if (index == msglist.length) {
-                    return const SizedBox(height: 75);
+                    return const SizedBox(height: 70);
                   }
                   return SingleChildScrollView(
                     child: ChatBubble(
@@ -88,12 +92,25 @@ class _PrivateChatState extends State<PrivateChat> {
                         constraints: BoxConstraints(
                           maxWidth: MediaQuery.of(context).size.width * 0.7,
                         ),
-                        child: Text(
-                          "${msglist[index].message!.data!}\n${msglist[index].message!.time}",
-                          style: TextStyle(
-                              color: (msglist[index].message!.isme!)
-                                  ? Colors.white
-                                  : Colors.black),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(msglist[index].message!.data!,
+                              style: TextStyle(
+                                color: (msglist[index].message!.isme!)
+                                    ? Colors.white
+                                    : Colors.black),
+                              textScaleFactor: 1.2,
+                            ),
+                            Text(msglist[index].message!.time!,
+                              style: TextStyle(
+                                color: (msglist[index].message!.isme!)
+                                    ? Colors.white60
+                                    : Colors.black54),
+                              textAlign: TextAlign.right,
+                              textScaleFactor: 0.75,
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -117,7 +134,7 @@ class _PrivateChatState extends State<PrivateChat> {
                 const SizedBox(width: 8),
                 FloatingActionButton(
                   onPressed: () {
-                    sendMsg("YOU");
+                    sendMsg;
                     _scroll.jumpTo(_scroll.position.maxScrollExtent);
                   },
                   elevation: 0,
