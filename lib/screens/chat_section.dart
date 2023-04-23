@@ -16,23 +16,24 @@ class _ChatSectionState extends State<ChatSection> {
   final TextEditingController _roomController = TextEditingController();
 
   Future<void> onChatTap() async {
-    if(_chatformkey.currentState!.validate()){
+    if (_chatformkey.currentState!.validate()) {
       setState(() {});
-      Navigator.push(context,
-        MaterialPageRoute(
-          builder: (_) => PrivateChat(userid: _chatController.text)
-        ));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (_) => PrivateChat(userid: _chatController.text)));
       await Future.delayed(const Duration(seconds: 1));
       _chatController.clear();
     }
   }
+
   Future<void> onRoomTap() async {
-    if(_roomformkey.currentState!.validate()){
+    if (_roomformkey.currentState!.validate()) {
       setState(() {});
-      Navigator.push(context,
-        MaterialPageRoute(
-          builder: (_) => GroupChat(roomName: _roomController.text)
-        ));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (_) => GroupChat(roomName: _roomController.text)));
       await Future.delayed(const Duration(seconds: 1));
       _roomController.clear();
     }
@@ -53,23 +54,22 @@ class _ChatSectionState extends State<ChatSection> {
             children: [
               Form(
                 key: _chatformkey,
-                child: Column(
-                  children: [
-                    TextFormField(
-                      controller: _chatController,
-                      textAlign: TextAlign.center,
-                      decoration: const InputDecoration(
-                        hintText: "Enter friend's username to chat",
-                        border: OutlineInputBorder(
+                child: Column(children: [
+                  TextFormField(
+                    controller: _chatController,
+                    textAlign: TextAlign.center,
+                    decoration: const InputDecoration(
+                      hintText: "Enter friend's username to chat",
+                      border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(30))),
-                      ),
-                      validator: (value) {
-                        if(value!.isEmpty) return "Field cannot be empty";
-                        return null;
-                      },
                     ),
-                    const SizedBox(height: 24),
-                    InkWell(
+                    validator: (value) {
+                      if (value!.isEmpty) return "Field cannot be empty";
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 24),
+                  InkWell(
                       onTap: onChatTap,
                       splashColor: Theme.of(context).cardColor,
                       child: Container(
@@ -82,28 +82,27 @@ class _ChatSectionState extends State<ChatSection> {
                         ),
                         child: const Text("Start Conversation"),
                       )),
-                  ]),
+                ]),
               ),
               Form(
                 key: _roomformkey,
-                child: Column(
-                  children: [
-                    const SizedBox(height: 100),
-                    TextFormField(
-                      controller: _roomController,
-                      textAlign: TextAlign.center,
-                      decoration: const InputDecoration(
-                        hintText: "Enter a room name to group chat",
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(30))),
-                      ),
-                      validator: (value) {
-                        if(value!.isEmpty) return "Field cannot be empty";
-                        return null;
-                      },
+                child: Column(children: [
+                  const SizedBox(height: 100),
+                  TextFormField(
+                    controller: _roomController,
+                    textAlign: TextAlign.center,
+                    decoration: const InputDecoration(
+                      hintText: "Enter a room name to group chat",
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(30))),
                     ),
-                    const SizedBox(height: 24),
-                    InkWell(
+                    validator: (value) {
+                      if (value!.isEmpty) return "Field cannot be empty";
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 24),
+                  InkWell(
                       onTap: onRoomTap,
                       splashColor: Theme.of(context).cardColor,
                       child: Container(
@@ -116,7 +115,7 @@ class _ChatSectionState extends State<ChatSection> {
                         ),
                         child: const Text("Connect to room"),
                       )),
-                  ]),
+                ]),
               )
             ],
           ),

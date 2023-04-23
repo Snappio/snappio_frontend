@@ -4,7 +4,7 @@ import 'package:snappio_frontend/screens/signup_page.dart';
 import 'package:snappio_frontend/screens/splash_screen.dart';
 import 'package:snappio_frontend/widgets/bottom_navbar.dart';
 
-Route<dynamic> generateRoute(RouteSettings routeSettings){
+Route<dynamic> generateRoute(RouteSettings routeSettings) {
   switch (routeSettings.name) {
     case SplashScreen.routeName:
       return MaterialPageRoute(
@@ -13,23 +13,19 @@ Route<dynamic> generateRoute(RouteSettings routeSettings){
       );
     case LoginPage.routeName:
       return MaterialPageRoute(
-        settings: routeSettings,
-        builder: (_) => const LoginPage());
+          settings: routeSettings, builder: (_) => const LoginPage());
     case SignupPage.routeName:
       return MaterialPageRoute(
-          settings: routeSettings,
-          builder: (_) => const SignupPage());
+          settings: routeSettings, builder: (_) => const SignupPage());
     case BottomNavBar.routeName:
       return MaterialPageRoute(
-          settings: routeSettings,
-          builder: (_) => const BottomNavBar());
+          settings: routeSettings, builder: (_) => const BottomNavBar());
     default:
       return MaterialPageRoute(
-        settings: routeSettings,
-        builder: (_) => const Scaffold(
-          body: Center(
-            child: Text("This page doesn't exists"),
-          ))
-      );
+          settings: routeSettings,
+          builder: (_) => const Scaffold(
+                  body: Center(
+                child: Text("This page doesn't exists"),
+              )));
   }
 }

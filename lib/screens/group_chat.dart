@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
 import 'package:provider/provider.dart';
 import 'package:snappio_frontend/provider/msg_provider.dart';
@@ -48,12 +49,11 @@ class _GroupChatState extends State<GroupChat> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: const CircleAvatar(
-            backgroundImage: AssetImage("assets/images/profile_avatar.png")),
         title: Text(roomId),
+        elevation: 0,
       ),
       body: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
         child: Column(
           children: [
             Expanded(
@@ -61,11 +61,8 @@ class _GroupChatState extends State<GroupChat> {
                 controller: _scroll,
                 physics: const BouncingScrollPhysics(
                     parent: AlwaysScrollableScrollPhysics()),
-                itemCount: msglist.length + 1,
+                itemCount: msglist.length,
                 itemBuilder: (context, index) {
-                  if (index == msglist.length) {
-                    return const SizedBox(height: 80);
-                  }
                   return SingleChildScrollView(
                     child: ChatBubble(
                       clipper: ChatBubbleClipper5(
@@ -76,7 +73,7 @@ class _GroupChatState extends State<GroupChat> {
                       alignment: (msglist[index].message!.isme!)
                           ? Alignment.topRight
                           : Alignment.topLeft,
-                      margin: const EdgeInsets.only(top: 14),
+                      margin: const EdgeInsets.symmetric(vertical: 8),
                       backGroundColor: (msglist[index].message!.isme!)
                           ? Colors.indigoAccent
                           : Colors.greenAccent,
@@ -87,24 +84,27 @@ class _GroupChatState extends State<GroupChat> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("${msglist[index].message!.user!}:",
+                            Text(
+                              "${msglist[index].message!.user!}:",
                               style: TextStyle(
-                                color: (msglist[index].message!.isme!)
-                                    ? Colors.white60
-                                    : Colors.black54),
+                                  color: (msglist[index].message!.isme!)
+                                      ? Colors.white60
+                                      : Colors.black54),
                             ),
-                            Text(msglist[index].message!.data!,
+                            Text(
+                              msglist[index].message!.data!,
                               style: TextStyle(
-                                color: (msglist[index].message!.isme!)
-                                    ? Colors.white
-                                    : Colors.black),
+                                  color: (msglist[index].message!.isme!)
+                                      ? Colors.white
+                                      : Colors.black),
                               textScaleFactor: 1.2,
                             ),
-                            Text(msglist[index].message!.time!,
+                            Text(
+                              msglist[index].message!.time!,
                               style: TextStyle(
-                                color: (msglist[index].message!.isme!)
-                                    ? Colors.white60
-                                    : Colors.black54),
+                                  color: (msglist[index].message!.isme!)
+                                      ? Colors.white60
+                                      : Colors.black54),
                               textScaleFactor: 0.75,
                             ),
                           ],
@@ -131,8 +131,11 @@ class _GroupChatState extends State<GroupChat> {
                 const SizedBox(width: 8),
                 FloatingActionButton(
                   onPressed: () {
-                    sendMsg;
-                    _scroll.jumpTo(_scroll.position.maxScrollExtent);
+                    sendMsg();
+                    SchedulerBinding.instance
+                        .addPostFrameCallback((_) {
+                          _scroll.jumpTo(_scroll.position.maxScrollExtent);
+                        });
                   },
                   elevation: 0,
                   backgroundColor: Theme.of(context).cardColor,

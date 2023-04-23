@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:snappio_frontend/constants/snackbar.dart';
 import 'package:snappio_frontend/models/message_model.dart';
@@ -11,7 +12,8 @@ class WSServices {
   late IOWebSocketChannel channel;
   final String _baseurl = "wss://api-snappio.onrender.com/ws/";
 
-  connectPrivateSocket(BuildContext context, String userid, String token, String username, ScrollController scroll) {
+  connectPrivateSocket(BuildContext context, String userid, String token,
+      String username, ScrollController scroll) {
     try {
       channel =
           IOWebSocketChannel.connect("${_baseurl}user/$userid/", headers: {
@@ -24,7 +26,9 @@ class WSServices {
         if (msgData.message!.user != username) {
           Provider.of<MsgProvider>(context, listen: false).addMsg(msgData);
         }
-        scroll.jumpTo(scroll.position.maxScrollExtent);
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          scroll.jumpTo(scroll.position.maxScrollExtent);
+        });
       }, onDone: () {
         connectPrivateSocket(context, userid, token, username, scroll);
       }, onError: (error) {
@@ -50,7 +54,9 @@ class WSServices {
         if (msgData.message!.user != username) {
           Provider.of<MsgProvider>(context, listen: false).addMsg(msgData);
         }
-        scroll.jumpTo(scroll.position.maxScrollExtent);
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          scroll.jumpTo(scroll.position.maxScrollExtent);
+        });
       }, onDone: () {
         connectRoomSocket(context, roomId, username, scroll);
       }, onError: (error) {
