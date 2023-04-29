@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
+import 'package:profanity_filter/profanity_filter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:snappio_frontend/services/ws_services.dart';
+import '../constants/profanity_filter.dart';
+import '../constants/snackbar.dart';
 import '../provider/msg_provider.dart';
 import '../provider/user_provider.dart';
 
@@ -22,6 +25,7 @@ class _PrivateChatState extends State<PrivateChat> {
   final WSServices wsServices = WSServices();
   final TextEditingController _controller = TextEditingController();
   final ScrollController _scroll = ScrollController();
+  final filter = ProfanityFilter.filterAdditionally(obsceneFilter);
 
   @override
   void initState() {
@@ -38,9 +42,14 @@ class _PrivateChatState extends State<PrivateChat> {
 
   void sendMsg() {
     if (_controller.text != "") {
+      String censored = _controller.text;
+      if (filter.hasProfanity(censored)) {
+        censored = filter.censor(_controller.text);
+        showSnackBar(context, "Warning: Refrain from using obscene words");
+      }
       var dt = DateTime.now();
       String time = "${dt.hour}:${dt.minute}";
-      wsServices.sendMsg(context, _controller.text, username, time, false);
+      wsServices.sendMsg(context, censored, username, time, false);
       _controller.clear();
     }
   }
@@ -68,8 +77,7 @@ class _PrivateChatState extends State<PrivateChat> {
             Expanded(
               child: ListView.builder(
                 controller: _scroll,
-                physics: const BouncingScrollPhysics(
-                    parent: AlwaysScrollableScrollPhysics()),
+                physics: const BouncingScrollPhysics(),
                 itemCount: msglist.length,
                 itemBuilder: (context, index) {
                   return SingleChildScrollView(

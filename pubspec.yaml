@@ -45,6 +45,7 @@ dependencies:
   loading_animation_widget: ^1.2.0+4
   web_socket_channel: ^2.3.0
   flutter_chat_bubble: ^2.0.2
+  profanity_filter: ^2.0.0
 
 dev_dependencies:
   flutter_test:
