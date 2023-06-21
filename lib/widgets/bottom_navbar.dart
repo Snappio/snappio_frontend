@@ -50,28 +50,28 @@ class _BottomNavBarState extends State<BottomNavBar> {
         onTap: itemPressed,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Ionicons.chatbubble_ellipses_outline),
-            activeIcon: Icon(Ionicons.chatbubble_ellipses),
+            icon: Icon(Ionicons.chatbubble_ellipses_outline,size: 29),
+            activeIcon: Icon(Ionicons.chatbubble_ellipses,size: 29),
             label: 'chats',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Ionicons.heart_circle_outline),
-            activeIcon: Icon(Ionicons.heart),
+            icon: Icon(Ionicons.image_outline,size: 29),
+            activeIcon: Icon(Ionicons.image,size: 29),
             label: 'posts',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Ionicons.add_circle_outline),
-            activeIcon: Icon(Ionicons.add_circle),
-            label: 'upload',
-          ),
           // BottomNavigationBarItem(
-          //   icon: Icon(Ionicons.search_circle_outline),
-          //   activeIcon: Icon(Ionicons.search),
-          //   label: 'search',
+          //   icon: Icon(Ionicons.add_circle_outline,size: 29),
+          //   activeIcon: Icon(Ionicons.add_circle,size: 29),
+          //   label: 'upload',
           // ),
           BottomNavigationBarItem(
-            icon: Icon(Ionicons.person_circle_outline),
-            activeIcon: Icon(Ionicons.person),
+            icon: Icon(Ionicons.search_circle_outline),
+            activeIcon: Icon(Ionicons.search),
+            label: 'search',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Ionicons.person_circle_outline,size: 29),
+            activeIcon: Icon(Ionicons.person,size: 29),
             label: 'profile',
           ),
         ],

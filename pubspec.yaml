@@ -46,6 +46,8 @@ dependencies:
   web_socket_channel: ^2.3.0
   flutter_chat_bubble: ^2.0.2
   profanity_filter: ^2.0.0
+  like_button: ^2.0.5
+  intl: ^0.18.1
 
 dev_dependencies:
   flutter_test:

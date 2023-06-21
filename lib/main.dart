@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:snappio_frontend/provider/msg_provider.dart';
+import 'package:snappio_frontend/provider/post_provider.dart';
 import 'package:snappio_frontend/provider/user_provider.dart';
 import 'package:snappio_frontend/router.dart';
 import 'package:snappio_frontend/themes.dart';
@@ -26,7 +27,8 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UserProvider()),
-        ChangeNotifierProvider(create: (_) => MsgProvider())
+        ChangeNotifierProvider(create: (_) => MsgProvider()),
+        ChangeNotifierProvider(create: (_) => PostsProvider())
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
