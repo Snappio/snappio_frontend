@@ -48,6 +48,8 @@ dependencies:
   profanity_filter: ^2.0.0
   like_button: ^2.0.5
   intl: ^0.18.1
+  image_picker: ^0.8.9
+  cross_file_image: ^1.0.0
 
 dev_dependencies:
   flutter_test:

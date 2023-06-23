@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:snappio_frontend/screens/login_page.dart';
 import 'package:snappio_frontend/screens/signup_page.dart';
 import 'package:snappio_frontend/screens/splash_screen.dart';
+import 'package:snappio_frontend/screens/upload_section.dart';
 import 'package:snappio_frontend/widgets/bottom_navbar.dart';
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
@@ -20,12 +21,15 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
     case BottomNavBar.routeName:
       return MaterialPageRoute(
           settings: routeSettings, builder: (_) => const BottomNavBar());
+    case UploadSection.routeName:
+      return MaterialPageRoute(
+          settings: routeSettings, builder: (_) => const UploadSection());
     default:
       return MaterialPageRoute(
-          settings: routeSettings,
-          builder: (_) => const Scaffold(
-                  body: Center(
-                child: Text("This page doesn't exists"),
-              )));
+        settings: routeSettings,
+        builder: (_) => const Scaffold(
+            body: Center(
+            child: Text("This page doesn't exists"),
+        )));
   }
 }

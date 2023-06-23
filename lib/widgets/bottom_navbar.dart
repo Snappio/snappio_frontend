@@ -4,7 +4,7 @@ import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 import 'package:snappio_frontend/screens/chat_section.dart';
 import 'package:snappio_frontend/screens/posts_feed.dart';
 import 'package:snappio_frontend/screens/profile_section.dart';
-import 'package:snappio_frontend/screens/upload_section.dart';
+import 'package:snappio_frontend/screens/search_user.dart';
 
 class BottomNavBar extends StatefulWidget {
   static const routeName = '/navbar';
@@ -34,7 +34,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
         children: const [
           ChatSection(),
           PostsFeed(),
-          UploadSection(),
+          SearchUser(),
           ProfileSection(),
         ],
       ),
@@ -59,14 +59,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
             activeIcon: Icon(Ionicons.image,size: 29),
             label: 'posts',
           ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(Ionicons.add_circle_outline,size: 29),
-          //   activeIcon: Icon(Ionicons.add_circle,size: 29),
-          //   label: 'upload',
-          // ),
           BottomNavigationBarItem(
-            icon: Icon(Ionicons.search_circle_outline),
-            activeIcon: Icon(Ionicons.search),
+            icon: Icon(Ionicons.search,size: 29),
+            activeIcon: Icon(Ionicons.search_circle,size: 36),
             label: 'search',
           ),
           BottomNavigationBarItem(

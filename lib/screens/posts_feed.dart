@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:snappio_frontend/screens/upload_section.dart';
 import 'package:snappio_frontend/services/posts_services.dart';
+import 'package:snappio_frontend/themes.dart';
 import 'package:snappio_frontend/widgets/post_card.dart';
 import '../models/posts_model.dart';
 import '../provider/post_provider.dart';
@@ -30,7 +32,20 @@ class _PostsFeedState extends State<PostsFeed> {
         Provider.of<PostsProvider>(context, listen: true).posts;
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Snappio"), centerTitle: true),
+      appBar: AppBar(title: const Text("Snappio"), centerTitle: true, actions: [
+        TextButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed(UploadSection.routeName);
+            },
+            child: Text("Post",
+                style: TextStyle(
+                    color: MediaQuery.of(context).platformBrightness ==
+                            Brightness.dark
+                        ? Themes.lightBg
+                        : Colors.black87,
+                    fontWeight: FontWeight.bold),
+                textScaleFactor: 1.2))
+      ]),
       body: RefreshIndicator(
         onRefresh: () {
           setState(() {
