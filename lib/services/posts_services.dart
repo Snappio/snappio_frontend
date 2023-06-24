@@ -30,6 +30,24 @@ class PostsServices {
     }
   }
 
+  Future<bool> getUserPosts(BuildContext context, String? username) async {
+    try {
+      Response response =
+          await _dio.get(_baseUrl, queryParameters: {"username": username});
+      if (response.statusCode! < 300) {
+        final List jsonData = response.data;
+        final List<PostsModel> postsList =
+            jsonData.map((item) => PostsModel.fromJson(item)).toList();
+        Provider.of<PostsProvider>(context, listen: false).setPosts(postsList);
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
+
   Future<bool> post(
       BuildContext context, String caption, File file, String? token) async {
     try {
