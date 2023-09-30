@@ -41,9 +41,11 @@ class PostsServices {
         Provider.of<PostsProvider>(context, listen: false).setPosts(postsList);
         return true;
       } else {
+        showSnackBar(context, "Sorry couldn't find user at the moment");
         return false;
       }
     } catch (e) {
+      log(e.toString());
       return false;
     }
   }
@@ -70,6 +72,7 @@ class PostsServices {
         return false;
       }
     } catch (e) {
+      log(e.toString());
       showSnackBar(context, "Posting Failed");
       return false;
     }

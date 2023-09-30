@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:snappio_frontend/constants/snackbar.dart';
 import 'package:snappio_frontend/services/posts_services.dart';
 
 class UploadSection extends StatefulWidget {
@@ -16,7 +17,7 @@ class UploadSection extends StatefulWidget {
 }
 
 class _UploadSectionState extends State<UploadSection> {
-  static XFile? _file = null;
+  static XFile? _file;
   final ImagePicker _imagePicker = ImagePicker();
   final TextEditingController _controller = TextEditingController();
   final RoundedLoadingButtonController _button =
@@ -44,28 +45,41 @@ class _UploadSectionState extends State<UploadSection> {
   }
 
   void uploadPost() async {
-    setState(() {
-      _loading = true;
-    });
-    File imageFile = File(_file!.path);
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString("x-auth");
-    bool status =
-        await PostsServices().post(context, _controller.text, imageFile, token);
-    if (status) {
-      _button.success();
-      await Future.delayed(const Duration(milliseconds: 1400));
-      Navigator.pop(context);
-    } else {
+    if (_controller.text.isEmpty) {
+      setState(() {
+        _loading = true;
+      });
       _button.error();
-      await Future.delayed(const Duration(milliseconds: 1400));
+      await Future.delayed(const Duration(milliseconds: 1200));
       _button.reset();
+      showSnackBar(context, "Caption cannot be empty");
       setState(() {
         _loading = false;
       });
+    } else {
       setState(() {
-        _file = null;
+        _loading = true;
       });
+      File imageFile = File(_file!.path);
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString("x-auth");
+      bool status = await PostsServices()
+          .post(context, _controller.text, imageFile, token);
+      if (status) {
+        _button.success();
+        await Future.delayed(const Duration(milliseconds: 1400));
+        Navigator.pop(context);
+      } else {
+        _button.error();
+        await Future.delayed(const Duration(milliseconds: 1400));
+        _button.reset();
+        setState(() {
+          _loading = false;
+        });
+        setState(() {
+          _file = null;
+        });
+      }
     }
   }
 

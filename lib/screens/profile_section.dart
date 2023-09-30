@@ -15,7 +15,7 @@ class ProfileSection extends StatefulWidget {
 
 class _ProfileSectionState extends State<ProfileSection> {
   final AuthServices authServices = AuthServices();
-  static bool? _loadDone = null;
+  static bool? _loadDone;
 
   @override
   void initState() {

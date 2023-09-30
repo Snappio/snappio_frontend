@@ -23,7 +23,7 @@ class _PostsFeedState extends State<PostsFeed> {
     super.initState();
     PostsServices()
         .fetchPosts(context)
-        .then((value) => setState(() => {isDone = value}));
+        .then((value) => setState(() => isDone = value));
   }
 
   @override
@@ -53,7 +53,7 @@ class _PostsFeedState extends State<PostsFeed> {
           });
           return PostsServices()
               .fetchPosts(context)
-              .then((value) => setState(() => {isDone = value}));
+              .then((value) => setState(() => isDone = value));
         },
         child: isDone == null
             ? Center(

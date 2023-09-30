@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:provider/provider.dart';
+import 'package:snappio_frontend/services/posts_services.dart';
+import '../provider/post_provider.dart';
 
 class SearchUser extends StatefulWidget {
   const SearchUser({super.key});
@@ -9,25 +12,52 @@ class SearchUser extends StatefulWidget {
 }
 
 class _SearchUserState extends State<SearchUser> {
-  static bool? _loadDone = null;
+  static bool? loadDone;
   final TextEditingController _controller = TextEditingController();
   final _usernameKey = GlobalKey<FormState>();
 
-  void searchUser() {}
+  void searchUser() async {
+    if (await PostsServices().getUserPosts(context, _controller.text)) {
+      setState(() {
+        loadDone = true;
+      });
+    } else {
+      setState(() {
+        loadDone = false;
+      });
+    }
+  }
+
+  void revert() {
+    setState(() {
+      loadDone = null;
+      _controller.clear();
+    });
+  }
+
+  @override
+  void dispose() {
+    loadDone = null;
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    var posts = Provider.of<PostsProvider>(context, listen: true).posts;
+
     return Scaffold(
         appBar: AppBar(
           title: const Text("Snappio"),
           centerTitle: true,
           actions: [
-            _loadDone == true
-                ? IconButton(onPressed: () {}, icon: const Icon(Ionicons.close))
+            loadDone == true
+                ? IconButton(
+                    onPressed: revert, icon: const Icon(Ionicons.close))
                 : const Text("")
           ],
         ),
-        body: _loadDone == null
+        body: loadDone == null
             ? Container(
                 padding: const EdgeInsets.all(16),
                 child: Column(children: [
@@ -48,7 +78,7 @@ class _SearchUserState extends State<SearchUser> {
                     )),
                     const SizedBox(width: 8),
                     InkWell(
-                      onTap: () {},
+                      onTap: searchUser,
                       borderRadius: BorderRadius.circular(50),
                       child: Container(
                         height: 60,
@@ -61,14 +91,57 @@ class _SearchUserState extends State<SearchUser> {
                     )
                   ]),
                   const SizedBox(height: 45),
-                  const Text("Search a friend", textScaleFactor: 1.1),
+                  const Text("Search a friend", textScaleFactor: 1.2),
                   Expanded(
                       child: Image.asset("assets/images/friend.png",
                           alignment: Alignment.bottomCenter))
                 ]),
               )
-            : _loadDone == true
-                ? Container()
-                : Container());
+            : loadDone == true && posts.isNotEmpty
+                ? SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const SizedBox(height: 60),
+                          const Center(
+                              child: CircleAvatar(
+                            backgroundImage:
+                                AssetImage("assets/images/profile_avatar.png"),
+                            radius: 50,
+                          )),
+                          const SizedBox(height: 20),
+                          Text(_controller.text, textScaleFactor: 1.4),
+                          const SizedBox(height: 110),
+                          GridView.count(
+                              physics: const ScrollPhysics(),
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 6,
+                              mainAxisSpacing: 6,
+                              shrinkWrap: true,
+                              children: List.generate(posts.length, (index) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(5),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image:
+                                            NetworkImage(posts[index].image!),
+                                        fit: BoxFit.cover,
+                                      ),
+                                      borderRadius: const BorderRadius.all(
+                                        Radius.circular(20.0),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }))
+                        ],
+                      ),
+                    ),
+                  )
+                : const Center(child: Text("No posts found of the user")));
   }
 }
