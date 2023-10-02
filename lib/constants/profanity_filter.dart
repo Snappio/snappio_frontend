@@ -79,6 +79,7 @@ List<String> obsceneFilter = [
   'bokachoda',
   'dhyamna',
   'gnar',
+  'gaar',
   'gud',
   'gudmarani',
   'khanki',
@@ -86,6 +87,7 @@ List<String> obsceneFilter = [
   'lawra',
   'laora',
   'maagi',
+  'marani',
   'paglachoda',
-  'pod',
+  'podmarani',
 ];
